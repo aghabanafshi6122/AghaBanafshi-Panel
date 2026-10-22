@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>پنل دیزاینو وی پی ان | Dizyno VPN Panel</title>
+  <title>PURPLE | پنل مدیریت</title>
   <!-- Bootstrap 5 RTL -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
   <!-- FontAwesome 6 -->
@@ -14,69 +14,186 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/css/style.css">
+
+  <!-- ==================== OVERRIDE PURPLE THEME ==================== -->
+  <style>
+    :root{
+      --purple-bg:#0a0418;
+      --purple-bg2:#140826;
+      --purple-card:#1a0a30;
+      --purple-border:#4c1d95;
+      --purple-text:#f3e8ff;
+      --purple-muted:#c4a5e8;
+      --purple-bright:#a855f7;
+      --purple-bright2:#c084fc;
+      --purple-bright3:#d8b4fe;
+      --purple-deep:#6b21a8;
+    }
+
+    body{
+      background-color: var(--purple-bg) !important;
+      color: var(--purple-text) !important;
+      font-family: Vazirmatn, sans-serif;
+    }
+
+    /* بک‌گراند گرادیانت */
+    body::before{
+      content:"";
+      position:fixed; inset:0; z-index:-1; pointer-events:none;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(168,85,247,.18), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(126,34,206,.22), transparent 45%),
+        linear-gradient(180deg,#0a0418 0%,#120622 55%,#1c0a35 100%);
+    }
+
+    /* برند آیکون */
+    .brand-icon{
+      background: linear-gradient(135deg,#a855f7,#6b21a8) !important;
+      color:#fff !important;
+      box-shadow: 0 0 20px rgba(168,85,247,.45) !important;
+    }
+
+    /* دکمه‌ها */
+    .btn-primary{
+      background: linear-gradient(135deg,#a855f7,#7e22ce) !important;
+      border-color: transparent !important;
+      color:#fff !important;
+    }
+    .btn-primary:hover{ background: linear-gradient(135deg,#c084fc,#9333ea) !important; }
+    .btn-outline-primary{ color:#c084fc !important; border-color:#a855f7 !important; }
+    .btn-outline-primary:hover{ background:#a855f7 !important; color:#fff !important; }
+    .btn-outline-info{ color:#d8b4fe !important; border-color:#c084fc !important; }
+    .btn-outline-info:hover{ background:#a855f7 !important; color:#fff !important; }
+    .btn-info{ background:#a855f7 !important; border-color:#a855f7 !important; color:#fff !important; }
+
+    /* فرم‌ها */
+    .form-control-dark, .form-control, .form-select{
+      background-color: #0f041d !important;
+      border:1px solid rgba(168,85,247,.3) !important;
+      color:#f3e8ff !important;
+    }
+    .form-control:focus, .form-select:focus{
+      border-color:#c084fc !important;
+      box-shadow:0 0 0 .2rem rgba(168,85,247,.25) !important;
+      background-color: #140826 !important;
+      color:#f3e8ff !important;
+    }
+    .form-control::placeholder{ color:#7c5fa8 !important; }
+    .input-group-text{
+      background-color:#0f041d !important;
+      border-color:rgba(168,85,247,.3) !important;
+      color:#c4a5e8 !important;
+    }
+
+    /* کارت‌ها و هدرها */
+    .login-card, .setup-card, .stat-card, .table-custom-wrapper{
+      background: linear-gradient(180deg,#1a0a30,#140826) !important;
+      border:1px solid #4c1d95 !important;
+      box-shadow: 0 12px 40px -10px rgba(168,85,247,.35) !important;
+    }
+    .navbar-custom{
+      background: linear-gradient(180deg,#1a0a30,#0f041d) !important;
+      border-bottom:1px solid #4c1d95 !important;
+    }
+
+    /* آیکون‌های کارت آمار */
+    .icon-blue   { background:linear-gradient(135deg,#a855f7,#7e22ce) !important; color:#fff; }
+    .icon-green  { background:linear-gradient(135deg,#c084fc,#9333ea) !important; color:#fff; }
+    .icon-cyan   { background:linear-gradient(135deg,#d8b4fe,#a855f7) !important; color:#fff; }
+    .icon-purple { background:linear-gradient(135deg,#9333ea,#6b21a8) !important; color:#fff; }
+
+    /* جدول */
+    .table-custom thead th{
+      background:#1a0a30 !important;
+      color:#d8b4fe !important;
+      border-bottom:1px solid #4c1d95 !important;
+    }
+    .table-custom tbody td{
+      color:#f3e8ff !important;
+      border-color:rgba(168,85,247,.15) !important;
+    }
+    .table-custom tbody tr:hover{ background: rgba(168,85,247,.08) !important; }
+
+    /* مودال‌ها */
+    .modal-content-dark{
+      background: linear-gradient(180deg,#1a0a30,#0f041d) !important;
+      border:1px solid #4c1d95 !important;
+      color:#f3e8ff !important;
+    }
+    .modal-header-dark, .modal-footer-dark{ border-color:#4c1d95 !important; }
+
+    /* متن‌های کم‌رنگ */
+    .text-muted{ color:#c4a5e8 !important; }
+
+    /* اسکرول‌بار */
+    ::-webkit-scrollbar{ width:8px; height:8px; }
+    ::-webkit-scrollbar-track{ background:#0a0418; }
+    ::-webkit-scrollbar-thumb{ background:#4c1d95; border-radius:4px; }
+    ::-webkit-scrollbar-thumb:hover{ background:#a855f7; }
+  </style>
 </head>
 <body>
 
-  <!-- ==================== 1. بخش راه‌اندازی اولیه (Initial Setup Section) ==================== -->
+  <!-- ==================== 1. راه‌اندازی اولیه ==================== -->
   <div id="setupSection" class="setup-wrapper d-none">
     <div class="setup-card text-center">
       <div class="brand-icon">
         <i class="fa-solid fa-bolt"></i>
       </div>
-      <h3 class="fw-bold mb-1 text-white">خوش آمدید به دیزاینو وی پی ان</h3>
+      <h3 class="fw-bold mb-1 text-white">خوش آمدید به PURPLE</h3>
       <p class="text-muted small mb-4">لطفاً برای اولین بار حساب مدیریتی سرور را راه‌اندازی کنید</p>
-      
+
       <form id="setupForm">
         <div class="mb-3 text-start">
           <label class="form-label small text-muted">نام کاربری ادمین <span class="text-danger">*</span></label>
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fa-solid fa-user"></i></span>
-            <input type="text" id="setupUsername" class="form-control form-control-dark" placeholder="مثال: admin" required>
+            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+            <input type="text" id="setupUsername" class="form-control" placeholder="مثال: admin" required>
           </div>
         </div>
         <div class="mb-4 text-start">
           <label class="form-label small text-muted">کلمه عبور ادمین <span class="text-danger">*</span></label>
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fa-solid fa-lock"></i></span>
-            <input type="password" id="setupPassword" class="form-control form-control-dark" placeholder="کلمه عبور قوی وارد کنید" required>
+            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="setupPassword" class="form-control" placeholder="کلمه عبور قوی وارد کنید" required>
           </div>
         </div>
         <div class="mb-4 text-start">
           <label class="form-label small text-muted">آی‌پی یا دامنه تمیز (اختیاری)</label>
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fa-solid fa-network-wired"></i></span>
-            <input type="text" id="setupCleanIp" class="form-control form-control-dark" placeholder="مثال: 162.159.192.1">
+            <span class="input-group-text"><i class="fa-solid fa-network-wired"></i></span>
+            <input type="text" id="setupCleanIp" class="form-control" placeholder="مثال: 162.159.192.1">
           </div>
         </div>
         <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
-          <i class="fa-solid fa-check-circle me-2"></i> راه‌اندازی و ورود به پنل
+          <i class="fa-solid fa-check-circle me-2"></i> راه‌اندازی و ورود
         </button>
       </form>
     </div>
   </div>
 
-  <!-- ==================== 2. بخش ورود (Login Section) ==================== -->
+  <!-- ==================== 2. ورود ==================== -->
   <div id="loginSection" class="login-wrapper d-none">
     <div class="login-card text-center">
       <div class="brand-icon">
         <i class="fa-solid fa-bolt"></i>
       </div>
-      <h3 class="fw-bold mb-1 text-white">پنل دیزاینو وی پی ان</h3>
+      <h3 class="fw-bold mb-1 text-white">PURPLE</h3>
       <p class="text-muted small mb-4">ورود به حساب مدیریتی سرور VPN</p>
-      
+
       <form id="loginForm">
         <div class="mb-3 text-start">
           <label class="form-label small text-muted">نام کاربری</label>
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fa-solid fa-user"></i></span>
-            <input type="text" id="loginUsername" class="form-control form-control-dark" placeholder="نام کاربری" required>
+            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+            <input type="text" id="loginUsername" class="form-control" placeholder="نام کاربری" required>
           </div>
         </div>
         <div class="mb-4 text-start">
           <label class="form-label small text-muted">کلمه عبور</label>
           <div class="input-group">
-            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fa-solid fa-lock"></i></span>
-            <input type="password" id="loginPassword" class="form-control form-control-dark" placeholder="••••••••" required>
+            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
           </div>
         </div>
         <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 fw-bold">
@@ -86,18 +203,17 @@
     </div>
   </div>
 
-  <!-- ==================== 3. بخش داشبورد (Dashboard Section) ==================== -->
+  <!-- ==================== 3. داشبورد ==================== -->
   <div id="dashboardSection" class="d-none">
-    
-    <!-- هدر و نوار ابزار -->
+
     <nav class="navbar navbar-custom d-flex justify-content-between align-items-center flex-wrap gap-3">
       <div class="d-flex align-items-center gap-3">
-        <div class="brand-icon mb-0" style="width: 44px; height: 44px; font-size: 22px;">
+        <div class="brand-icon mb-0" style="width:44px;height:44px;font-size:22px;">
           <i class="fa-solid fa-bolt"></i>
         </div>
         <div>
-          <h5 class="mb-0 fw-bold text-white">پنل دیزاینو وی پی ان</h5>
-          <span class="small text-muted" style="font-size: 0.78rem;">هسته Sing-box VLESS/Trojan (مبتنی بر Railway)</span>
+          <h5 class="mb-0 fw-bold text-white">PURPLE</h5>
+          <span class="small text-muted" style="font-size:0.78rem;">هسته Sing-box VLESS/Trojan (مبتنی بر Railway)</span>
         </div>
       </div>
 
@@ -108,13 +224,13 @@
         <button class="btn btn-sm btn-outline-primary rounded-3" data-bs-toggle="modal" data-bs-target="#telegramModal">
           <i class="fa-brands fa-telegram me-1"></i> ربات تلگرام
         </button>
-        <button class="btn btn-sm btn-outline-light rounded-3" onclick="startOnboardingTour()" title="راهنمای پنل">
+        <button class="btn btn-sm btn-outline-light rounded-3" onclick="startOnboardingTour()" title="راهنما">
           <i class="fa-solid fa-circle-question"></i>
         </button>
-        <button class="btn btn-sm btn-outline-warning rounded-3" id="themeToggleBtn" onclick="toggleTheme()" title="تغییر تم (تیره / روشن)">
+        <button class="btn btn-sm btn-outline-warning rounded-3" id="themeToggleBtn" onclick="toggleTheme()" title="تغییر تم">
           <i class="fa-solid fa-sun" id="themeToggleIcon"></i>
         </button>
-        <button class="btn btn-sm btn-outline-light rounded-3" data-bs-toggle="modal" data-bs-target="#settingsModal" title="تنظیمات سیستم">
+        <button class="btn btn-sm btn-outline-light rounded-3" data-bs-toggle="modal" data-bs-target="#settingsModal" title="تنظیمات">
           <i class="fa-solid fa-gear"></i>
         </button>
         <div class="vr mx-1 bg-secondary opacity-50"></div>
@@ -125,10 +241,8 @@
       </div>
     </nav>
 
-    <!-- محتوای اصلی -->
     <div class="container-fluid p-4">
-      
-      <!-- کارت‌های آمار -->
+
       <div id="tourStats" class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
           <div class="stat-card d-flex align-items-center justify-content-between">
@@ -136,63 +250,50 @@
               <div class="text-muted small mb-1">کل کاربران</div>
               <h3 id="statTotalUsers" class="fw-bold mb-0 text-white">0</h3>
             </div>
-            <div class="stat-icon icon-blue">
-              <i class="fa-solid fa-users"></i>
-            </div>
+            <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
           </div>
         </div>
-
         <div class="col-12 col-sm-6 col-xl-3">
           <div class="stat-card d-flex align-items-center justify-content-between">
             <div>
               <div class="text-muted small mb-1">کاربران فعال</div>
               <h3 id="statActiveUsers" class="fw-bold mb-0 text-success">0</h3>
             </div>
-            <div class="stat-icon icon-green">
-              <i class="fa-solid fa-user-check"></i>
-            </div>
+            <div class="stat-icon icon-green"><i class="fa-solid fa-user-check"></i></div>
           </div>
         </div>
-
         <div class="col-12 col-sm-6 col-xl-3">
           <div class="stat-card d-flex align-items-center justify-content-between">
             <div>
               <div class="text-muted small mb-1">حجم کل تخصیصی</div>
-              <h3 id="statTotalLimit" class="fw-bold mb-0 text-info">0 GB</h3>
+              <h3 id="statTotalLimit" class="fw-bold mb-0" style="color:#d8b4fe;">0 GB</h3>
             </div>
-            <div class="stat-icon icon-cyan">
-              <i class="fa-solid fa-database"></i>
-            </div>
+            <div class="stat-icon icon-cyan"><i class="fa-solid fa-database"></i></div>
           </div>
         </div>
-
         <div class="col-12 col-sm-6 col-xl-3">
           <div class="stat-card d-flex align-items-center justify-content-between">
             <div>
               <div class="text-muted small mb-1">ترافیک کل مصرفی</div>
-              <h3 id="statTotalUsed" class="fw-bold mb-0 text-warning">0 GB</h3>
+              <h3 id="statTotalUsed" class="fw-bold mb-0" style="color:#c084fc;">0 GB</h3>
             </div>
-            <div class="stat-icon icon-purple">
-              <i class="fa-solid fa-chart-line"></i>
-            </div>
+            <div class="stat-icon icon-purple"><i class="fa-solid fa-chart-line"></i></div>
           </div>
         </div>
       </div>
 
-      <!-- جدول مدیریت کاربران -->
       <div id="tourUsersTable" class="table-custom-wrapper">
-        <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-3" style="border-color:#4c1d95 !important;">
           <div class="d-flex align-items-center gap-3">
-            <h5 class="fw-bold mb-0 text-white"><i class="fa-solid fa-users text-primary me-2"></i> کاربران پنل</h5>
-            <input type="text" id="userSearchInput" class="form-control form-control-dark form-control-sm" placeholder="جستجوی کاربر..." style="max-width: 200px;">
-            <select id="userFilterSelect" class="form-select form-control-dark form-control-sm" style="max-width: 140px;">
+            <h5 class="fw-bold mb-0 text-white"><i class="fa-solid fa-users me-2" style="color:#c084fc;"></i> کاربران</h5>
+            <input type="text" id="userSearchInput" class="form-control form-control-sm" placeholder="جستجوی کاربر..." style="max-width:200px;">
+            <select id="userFilterSelect" class="form-select form-control-sm" style="max-width:140px;">
               <option value="all">همه وضعیت‌ها</option>
               <option value="active">فعال</option>
               <option value="expired">منقضی/حجم پر</option>
               <option value="disabled">غیرفعال</option>
             </select>
           </div>
-
           <button id="tourAddUserBtn" class="btn btn-primary rounded-3 px-3" data-bs-toggle="modal" data-bs-target="#createUserModal">
             <i class="fa-solid fa-user-plus me-1"></i> ایجاد کاربر جدید
           </button>
@@ -202,7 +303,7 @@
           <table class="table table-custom align-middle">
             <thead>
               <tr>
-                <th style="width: 50px;">#</th>
+                <th style="width:50px;">#</th>
                 <th>نام کاربر</th>
                 <th>وضعیت</th>
                 <th>حجم مصرفی / کل</th>
@@ -210,9 +311,7 @@
                 <th class="text-center">عملیات</th>
               </tr>
             </thead>
-            <tbody id="usersTableBody">
-              <!-- کاربران از طریق JavaScript بارگذاری می‌شوند -->
-            </tbody>
+            <tbody id="usersTableBody"></tbody>
           </table>
         </div>
       </div>
@@ -220,27 +319,27 @@
     </div>
   </div>
 
-  <!-- ==================== مودال ساخت کاربر جدید ==================== -->
+  <!-- ==================== مودال ساخت کاربر ==================== -->
   <div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content modal-content-dark">
         <div class="modal-header modal-header-dark">
-          <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2 text-primary"></i> ساخت کاربر جدید</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2" style="color:#c084fc;"></i> ساخت کاربر جدید</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <form id="createUserForm">
           <div class="modal-body p-4">
             <div class="mb-3">
               <label class="form-label small text-muted">نام کاربر <span class="text-danger">*</span></label>
-              <input type="text" id="newUserName" class="form-control form-control-dark" placeholder="مثال: علی رضایی" required>
+              <input type="text" id="newUserName" class="form-control" placeholder="مثال: علی رضایی" required>
             </div>
             <div class="mb-3">
               <label class="form-label small text-muted">حجم مجاز (گیگابایت)</label>
-              <input type="number" id="newUserLimitGB" class="form-control form-control-dark" placeholder="مثال: 50 (0 برای نامحدود)" step="0.5" min="0" value="50">
+              <input type="number" id="newUserLimitGB" class="form-control" placeholder="0 برای نامحدود" step="0.5" min="0" value="50">
             </div>
             <div class="mb-3">
               <label class="form-label small text-muted">مدت اعتبار (روز)</label>
-              <input type="number" id="newUserExpireDays" class="form-control form-control-dark" placeholder="مثال: 30" min="0" value="30">
+              <input type="number" id="newUserExpireDays" class="form-control" placeholder="مثال: 30" min="0" value="30">
             </div>
           </div>
           <div class="modal-footer modal-footer-dark">
@@ -252,71 +351,64 @@
     </div>
   </div>
 
-  <!-- ==================== مودال اسکنر آی‌پی تمیز ==================== -->
+  <!-- ==================== مودال آی‌پی تمیز ==================== -->
   <div class="modal fade" id="cleanIpModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content modal-content-dark">
         <div class="modal-header modal-header-dark">
-          <h5 class="modal-title fw-bold"><i class="fa-solid fa-network-wired me-2 text-info"></i> اسکنر و مدیریت آی‌پی‌های تمیز</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-bold"><i class="fa-solid fa-network-wired me-2" style="color:#d8b4fe;"></i> اسکنر و مدیریت آی‌پی تمیز</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4">
-          <p class="text-muted small mb-3">آی‌پی تمیز باعث بهبود اتصال و پینگ پایین‌تر در اپراتورهای مختلف کشور می‌شود.</p>
-
+          <p class="text-muted small mb-3">آی‌پی تمیز باعث بهبود اتصال و پینگ پایین‌تر می‌شود.</p>
           <div class="mb-4">
-            <label class="form-label small text-white fw-bold">آی‌پی یا دامنه تمیز فعلی پنل:</label>
+            <label class="form-label small text-white fw-bold">آی‌پی یا دامنه تمیز فعلی:</label>
             <div class="input-group">
-              <input type="text" id="currentCleanIpInput" class="form-control form-control-dark" placeholder="آدرس دامنه اصلی سرور (پیش‌فرض)">
-              <button class="btn btn-info text-white" onclick="saveCleanIpFromModal()">
-                <i class="fa-solid fa-save me-1"></i> اعمال آی‌پی تمیز
+              <input type="text" id="currentCleanIpInput" class="form-control" placeholder="آدرس دامنه اصلی سرور">
+              <button class="btn btn-info" onclick="saveCleanIpFromModal()">
+                <i class="fa-solid fa-save me-1"></i> اعمال
               </button>
             </div>
           </div>
-
-          <h6 class="fw-bold text-white mb-3">آی‌پی‌های تمیز پیشنهادی سرور:</h6>
-          <div class="row g-3" id="cleanIpsContainer">
-            <!-- از طریق JS بارگذاری می‌شود -->
-          </div>
+          <h6 class="fw-bold text-white mb-3">آی‌پی‌های تمیز پیشنهادی:</h6>
+          <div class="row g-3" id="cleanIpsContainer"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== مودال ربات تلگرام ==================== -->
+  <!-- ==================== مودال تلگرام ==================== -->
   <div class="modal fade" id="telegramModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content modal-content-dark">
         <div class="modal-header modal-header-dark">
-          <h5 class="modal-title fw-bold"><i class="fa-brands fa-telegram me-2 text-info"></i> مدیریت و تنظیمات ربات تلگرام</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-bold"><i class="fa-brands fa-telegram me-2" style="color:#d8b4fe;"></i> تنظیمات ربات تلگرام</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <form id="telegramForm">
           <div class="modal-body p-4">
-            <div class="p-3 mb-4 rounded-4" style="background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.2);">
+            <div class="p-3 mb-4 rounded-4" style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);">
               <div class="d-flex align-items-center gap-2 mb-2">
-                <i class="fa-solid fa-robot text-info fs-5"></i>
-                <h6 class="fw-bold text-white mb-0">ربات مدیریتی تعاملی «دیزاینو وی پی ان»</h6>
+                <i class="fa-solid fa-robot fs-5" style="color:#c084fc;"></i>
+                <h6 class="fw-bold text-white mb-0">ربات مدیریتی PURPLE</h6>
               </div>
-              <p class="text-muted small mb-0">با ثبت توکن و کلیک بر روی دکمه فعال‌سازی، ربات به صورت خودکار شروع به کار کرده و پاسخگوی دستورات /start و منوهای مدیریت خواهد بود.</p>
+              <p class="text-muted small mb-0">با ثبت توکن و فعال‌سازی، ربات پاسخگوی دستورات /start و منوهای مدیریتی خواهد بود.</p>
             </div>
-
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">توکن ربات (BotFather Token)</label>
+              <label class="form-label text-white fw-bold">توکن ربات</label>
               <div class="input-group">
-                <input type="text" id="telegramTokenInput" class="form-control form-control-dark" placeholder="مثال: 123456789:ABCdefGHI...">
-                <button type="button" class="btn btn-info text-white px-3 fw-bold" onclick="triggerRailwaySetWebhook()">
-                  ⚡ فعال‌سازی و تست ربات
-                </button>
+                <input type="text" id="telegramTokenInput" class="form-control" placeholder="123456789:ABCdefGHI...">
+                <button type="button" class="btn btn-info px-3 fw-bold" onclick="triggerRailwaySetWebhook()">⚡ فعال‌سازی</button>
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label text-white fw-bold">شناسه عددی ادمین (Admin Chat ID)</label>
-              <input type="text" id="telegramAdminIdInput" class="form-control form-control-dark" placeholder="مثال: 8650344689">
+              <label class="form-label text-white fw-bold">شناسه عددی ادمین</label>
+              <input type="text" id="telegramAdminIdInput" class="form-control" placeholder="8650344689">
             </div>
           </div>
           <div class="modal-footer modal-footer-dark">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
-            <button type="submit" class="btn btn-primary px-4 fw-bold">ذخیره تنظیمات ربات</button>
+            <button type="submit" class="btn btn-primary px-4 fw-bold">ذخیره</button>
           </div>
         </form>
       </div>
@@ -328,27 +420,27 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content modal-content-dark">
         <div class="modal-header modal-header-dark">
-          <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-pen me-2 text-warning"></i> ویرایش کاربر</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-pen me-2" style="color:#f59e0b;"></i> ویرایش کاربر</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <form id="editUserForm">
           <input type="hidden" id="editUserId">
           <div class="modal-body p-4">
             <div class="mb-3">
               <label class="form-label small text-muted">نام کاربر</label>
-              <input type="text" id="editUserName" class="form-control form-control-dark" required>
+              <input type="text" id="editUserName" class="form-control" required>
             </div>
             <div class="mb-3">
               <label class="form-label small text-muted">حجم مجاز (گیگابایت)</label>
-              <input type="number" id="editUserLimitGB" class="form-control form-control-dark" step="0.5" min="0">
+              <input type="number" id="editUserLimitGB" class="form-control" step="0.5" min="0">
             </div>
             <div class="mb-3">
-              <label class="form-label small text-muted">تاریخ انقضا (YYYY-MM-DD)</label>
-              <input type="date" id="editUserExpireDate" class="form-control form-control-dark">
+              <label class="form-label small text-muted">تاریخ انقضا</label>
+              <input type="date" id="editUserExpireDate" class="form-control">
             </div>
             <div class="mb-3">
-              <label class="form-label small text-muted">وضعیت کاربر</label>
-              <select id="editUserStatus" class="form-select form-control-dark">
+              <label class="form-label small text-muted">وضعیت</label>
+              <select id="editUserStatus" class="form-select">
                 <option value="active">فعال</option>
                 <option value="disabled">غیرفعال</option>
               </select>
@@ -356,91 +448,82 @@
           </div>
           <div class="modal-footer modal-footer-dark">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
-            <button type="submit" class="btn btn-warning px-4">ذخیره تغییرات</button>
+            <button type="submit" class="btn btn-warning px-4">ذخیره</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- ==================== مودال تنظیمات پنل ==================== -->
+  <!-- ==================== مودال تنظیمات ==================== -->
   <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content modal-content-dark">
         <div class="modal-header modal-header-dark">
-          <h5 class="modal-title fw-bold"><i class="fa-solid fa-sliders me-2 text-info"></i> تنظیمات کامل پنل دیزاینو</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title fw-bold"><i class="fa-solid fa-sliders me-2" style="color:#d8b4fe;"></i> تنظیمات PURPLE</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <form id="settingsForm">
           <div class="modal-body p-4">
-            <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-user-shield me-2 text-primary"></i> اطلاعات حساب ادمین</h6>
+            <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-user-shield me-2" style="color:#c084fc;"></i> حساب ادمین</h6>
             <div class="row g-3 mb-4">
               <div class="col-md-6">
-                <label class="form-label text-white fw-bold">نام کاربری ادمین</label>
-                <input type="text" id="settingUsername" class="form-control form-control-dark">
+                <label class="form-label text-white fw-bold">نام کاربری</label>
+                <input type="text" id="settingUsername" class="form-control">
               </div>
               <div class="col-md-6">
                 <label class="form-label text-white fw-bold">کلمه عبور جدید (اختیاری)</label>
-                <input type="password" id="settingPassword" class="form-control form-control-dark">
+                <input type="password" id="settingPassword" class="form-control">
               </div>
             </div>
 
-            <!-- کادر اختصاصی ربات تلگرام -->
-            <div class="p-3 mb-4 rounded-4" style="background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.2);">
+            <div class="p-3 mb-4 rounded-4" style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);">
               <div class="d-flex align-items-center justify-content-between mb-3">
-                <h6 class="fw-bold text-info mb-0 d-flex align-items-center gap-2">
-                  <i class="fa-brands fa-telegram fs-4"></i> مدیریت و ربات تعاملی تلگرام
+                <h6 class="fw-bold mb-0 d-flex align-items-center gap-2" style="color:#d8b4fe;">
+                  <i class="fa-brands fa-telegram fs-4"></i> ربات تلگرام
                 </h6>
-                <span class="badge bg-info text-dark rounded-pill px-3 py-1 fw-bold">نسخه هوشمند</span>
+                <span class="badge rounded-pill px-3 py-1 fw-bold" style="background:#a855f7;color:#fff;">هوشمند</span>
               </div>
-              <p class="text-muted small mb-3">با ثبت توکن و کلیک بر روی دکمه فعال‌سازی، ربات به صورت خودکار شروع به کار کرده و پاسخگوی دستورات /start و منوهای مدیریت خواهد بود.</p>
-
               <div class="mb-3">
-                <label class="form-label text-white fw-bold">توکن ربات (BotFather Token)</label>
+                <label class="form-label text-white fw-bold">توکن ربات</label>
                 <div class="input-group">
-                  <input type="text" id="settingTelegramToken" class="form-control form-control-dark" placeholder="مثال: 123456789:ABCdefGHI...">
-                  <button type="button" class="btn btn-info text-white px-3 fw-bold" onclick="triggerRailwaySetWebhookFromSettings()">
-                    ⚡ فعال‌سازی و تست ربات
-                  </button>
+                  <input type="text" id="settingTelegramToken" class="form-control" placeholder="123456789:ABCdefGHI...">
+                  <button type="button" class="btn btn-info px-3 fw-bold" onclick="triggerRailwaySetWebhookFromSettings()">⚡ تست</button>
                 </div>
               </div>
-
               <div>
-                <label class="form-label text-white fw-bold">Chat ID عددی ادمین در تلگرام</label>
-                <input type="text" id="settingTelegramAdminId" class="form-control form-control-dark" placeholder="مثال: 8650344689">
+                <label class="form-label text-white fw-bold">Chat ID ادمین</label>
+                <input type="text" id="settingTelegramAdminId" class="form-control" placeholder="8650344689">
               </div>
             </div>
 
-            <h6 class="fw-bold text-white mb-2">پروتکل‌های خروجی اشتراک:</h6>
+            <h6 class="fw-bold text-white mb-2">پروتکل‌های خروجی:</h6>
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="settingEnableVlessWs" checked>
-              <label class="form-check-label small text-white" for="settingEnableVlessWs">فعال‌سازی VLESS-WS (پورت 443)</label>
+              <label class="form-check-label small text-white" for="settingEnableVlessWs">VLESS-WS (پورت 443)</label>
             </div>
             <div class="form-check form-switch mb-2">
               <input class="form-check-input" type="checkbox" id="settingEnableVlessGrpc" checked>
-              <label class="form-check-label small text-white" for="settingEnableVlessGrpc">فعال‌سازی VLESS-gRPC (پورت 443)</label>
+              <label class="form-check-label small text-white" for="settingEnableVlessGrpc">VLESS-gRPC (پورت 443)</label>
             </div>
             <div class="form-check form-switch mb-3">
               <input class="form-check-input" type="checkbox" id="settingEnableTrojanWs" checked>
-              <label class="form-check-label small text-white" for="settingEnableTrojanWs">فعال‌سازی Trojan-WS (پورت 443)</label>
+              <label class="form-check-label small text-white" for="settingEnableTrojanWs">Trojan-WS (پورت 443)</label>
             </div>
           </div>
           <div class="modal-footer modal-footer-dark">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
-            <button type="submit" class="btn btn-info text-white px-4">ذخیره تمام تنظیمات</button>
+            <button type="submit" class="btn btn-info text-white px-4">ذخیره</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- توست اعلان‌ها -->
-  <div id="toastContainer" class="toast-container position-fixed bottom-0 start-0 p-3" style="z-index: 9999;"></div>
+  <div id="toastContainer" class="toast-container position-fixed bottom-0 start-0 p-3" style="z-index:9999;"></div>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>
-
