@@ -46,7 +46,7 @@
 
 ### 🔹 روش دوم: نصب محلی با داکر (Docker & Docker-Compose)
 ```bash
-git clone https://github.com/MohammadMehdiArjmandManesh1386/purple-vpn-panel.git
+git clone https://github.com/aghabanafshi6122/AghaBanafshi-Panel.git
 cd purple-vpn-panel
 docker build -t purple-vpn-panel .
 docker run -d -p 3000:3000 --name purple-vpn purple-vpn-panel
