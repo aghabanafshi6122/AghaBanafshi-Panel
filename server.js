@@ -1,5 +1,5 @@
 /**
- * سرور اصلی پنل مدیریت «دیزاینو وی پی ان» (Dizyno VPN Panel)
+ * سرور اصلی پنل مدیریت «PURPLE» (Purple VPN Panel)
  * طراحی شده برای استقرار روی Railway (مبتنی بر Docker)
  * زبان: فارسی (RTL)
  */
@@ -31,14 +31,14 @@ const SINGBOX_CONFIG_FILE = path.join(DATA_DIR, 'singbox_config.json');
 
 // پیکربندی پیش‌فرض پنل
 const defaultSettings = {
-  isConfigured: false, // آیا راه‌اندازی اولیه انجام شده است؟
+  isConfigured: false,
   username: '',
   password: '',
-  jwtSecret: 'dizyno_secret_' + Math.random().toString(36).substring(2),
+  jwtSecret: 'purple_secret_' + Math.random().toString(36).substring(2),
   vlessPort: 8443,
   serviceName: 'vless-grpc',
-  trojanPassword: 'dizyno_trojan_pass_' + Math.random().toString(36).substring(2, 8),
-  cleanIp: '', // آی‌پی یا دامنه تمیز اختیاری
+  trojanPassword: 'purple_trojan_pass_' + Math.random().toString(36).substring(2, 8),
+  cleanIp: '',
   enableVlessWs: true,
   enableVlessGrpc: true,
   enableTrojanWs: true,
@@ -64,7 +64,7 @@ function saveSettings(newSettings) {
   fs.writeFileSync(SETTINGS_FILE, JSON.stringify(newSettings, null, 2), 'utf-8');
 }
 
-// دریافت یا ایجاد فایل کاربران (اولین بار خالی)
+// دریافت یا ایجاد فایل کاربران
 function getUsers() {
   if (!fs.existsSync(USERS_FILE)) {
     fs.writeFileSync(USERS_FILE, JSON.stringify([], null, 2), 'utf-8');
@@ -108,7 +108,7 @@ function rebuildSingboxConfig() {
   });
 
   const serviceName = settings.serviceName || "vless-grpc";
-  const trojanPass = settings.trojanPassword || "dizyno_trojan_pass";
+  const trojanPass = settings.trojanPassword || "purple_trojan_pass";
 
   const singboxConfig = {
     log: {
@@ -151,7 +151,7 @@ function rebuildSingboxConfig() {
         listen_port: 2085,
         users: [
           {
-            name: "dizyno-trojan-user",
+            name: "purple-trojan-user",
             password: trojanPass
           }
         ],
@@ -177,11 +177,11 @@ function rebuildSingboxConfig() {
   restartSingboxProcess();
 }
 
-// ---- سیستم ربات تلگرام تعاملی و گرافیکی (Stateful Wizard) ----
+// ---- سیستم ربات تلگرام تعاملی ----
 
 let lastTelegramUpdateId = 0;
 let telegramPollingTimeout = null;
-const botStateMap = {}; // ذخیره وضعیت مراحل ساخت و ویرایش کاربر در چت
+const botStateMap = {};
 
 function sendTelegramMessage(text, replyMarkup = null, customChatId = null) {
   const settings = getSettings();
@@ -240,7 +240,6 @@ function answerCallbackQuery(callbackQueryId, text = '') {
   req.end();
 }
 
-// کیبورد منوی اصلی ربات تلگرام
 function getTelegramMainMenuKeyboard() {
   return {
     keyboard: [
@@ -252,7 +251,6 @@ function getTelegramMainMenuKeyboard() {
   };
 }
 
-// موتور تعاملی پایش پیام‌های تلگرام (Long Polling)
 function initTelegramBot() {
   if (telegramPollingTimeout) clearTimeout(telegramPollingTimeout);
 
@@ -289,11 +287,9 @@ function initTelegramBot() {
   req.end();
 }
 
-// پردازش دستورات ورودی و اینلاین کیبوردهای تلگرام
 function handleTelegramUpdate(update) {
   const settings = getSettings();
 
-  // ۱. پردازش کلیک روی دکمه‌های اینلاین (Callback Query)
   if (update.callback_query) {
     const cb = update.callback_query;
     const chatId = cb.message.chat.id;
@@ -306,7 +302,6 @@ function handleTelegramUpdate(update) {
 
     answerCallbackQuery(cb.id);
 
-    // انتخاب حجم در ویزارد ساخت کاربر
     if (data.startsWith('c_limit_')) {
       const limitGB = parseFloat(data.replace('c_limit_', ''));
       if (!botStateMap[chatId]) botStateMap[chatId] = {};
@@ -332,14 +327,13 @@ function handleTelegramUpdate(update) {
       return;
     }
 
-    // انتخاب روز در ویزارد ساخت کاربر و تکمیل ثبت
     if (data.startsWith('c_days_')) {
       const expireDays = parseInt(data.replace('c_days_', ''));
       const state = botStateMap[chatId] || {};
       const name = state.name || 'کاربر جدید';
       const limitGB = state.limitGB || 0;
 
-      delete botStateMap[chatId]; // پاکسازی وضعیت
+      delete botStateMap[chatId];
 
       const users = getUsers();
       let expireDate = null;
@@ -361,7 +355,7 @@ function handleTelegramUpdate(update) {
       };
 
       users.push(newUser);
-      saveUsers(newUser);
+      saveUsers(users);
 
       const host = settings.cleanIp || 'سرور';
       const subUrl = `http://${host}/sub/${newUser.uuid}`;
@@ -379,14 +373,12 @@ function handleTelegramUpdate(update) {
       return;
     }
 
-    // مشاهده مشخصات و دکمه‌های کاربر انتخاب‌شده
     if (data.startsWith('u_det_')) {
       const userId = data.replace('u_det_', '');
       sendUserManagementCard(userId, chatId);
       return;
     }
 
-    // دریافت مستقیم لینک ساب
     if (data.startsWith('u_sub_')) {
       const userId = data.replace('u_sub_', '');
       const users = getUsers();
@@ -403,7 +395,6 @@ function handleTelegramUpdate(update) {
       return;
     }
 
-    // صفر کردن مصرف کاربر
     if (data.startsWith('u_reset_')) {
       const userId = data.replace('u_reset_', '');
       const users = getUsers();
@@ -417,7 +408,6 @@ function handleTelegramUpdate(update) {
       return;
     }
 
-    // تغییر وضعیت فعال / غیرفعال
     if (data.startsWith('u_toggle_')) {
       const userId = data.replace('u_toggle_', '');
       const users = getUsers();
@@ -431,7 +421,6 @@ function handleTelegramUpdate(update) {
       return;
     }
 
-    // حذف کاربر
     if (data.startsWith('u_del_')) {
       const userId = data.replace('u_del_', '');
       const users = getUsers();
@@ -446,7 +435,6 @@ function handleTelegramUpdate(update) {
     }
   }
 
-  // ۲. پردازش پیام‌های متنی و منوی اصلی
   if (!update.message || !update.message.text) return;
 
   const msg = update.message;
@@ -458,7 +446,6 @@ function handleTelegramUpdate(update) {
     return;
   }
 
-  // اگر کاربر در حال طی کردن مراحل ویزارد است
   if (botStateMap[chatId]) {
     const state = botStateMap[chatId];
 
@@ -553,18 +540,16 @@ function handleTelegramUpdate(update) {
     }
   }
 
-  // دستور /start یا منو
   if (text === '/start' || text === 'منو' || text === 'menu') {
     delete botStateMap[chatId];
     sendTelegramMessage(
-      `⚡ <b>به ربات مدیریتی «دیزاینو وی پی ان» خوش آمدید!</b>\n\nلطفاً یکی از گزینه‌های زیر را انتخاب کنید:`,
+      `⚡ <b>به ربات مدیریتی «PURPLE» خوش آمدید!</b>\n\nلطفاً یکی از گزینه‌های زیر را انتخاب کنید:`,
       getTelegramMainMenuKeyboard(),
       chatId
     );
     return;
   }
 
-  // شروع ویزارد ساخت کاربر جدید
   if (text === '➕ ساخت کاربر جدید (ویزارد)' || text === '/create') {
     botStateMap[chatId] = { step: 'await_name' };
     sendTelegramMessage(
@@ -577,7 +562,6 @@ function handleTelegramUpdate(update) {
     return;
   }
 
-  // آمار سرور
   if (text === '📊 آمار سرور' || text === '/stats') {
     const users = getUsers();
     const today = new Date().toISOString().split('T')[0];
@@ -590,7 +574,7 @@ function handleTelegramUpdate(update) {
     const usedGB = (totalUsedBytes / (1024 * 1024 * 1024)).toFixed(2);
 
     sendTelegramMessage(
-      `📊 <b>آمار کلی پنل دیزاینو وی پی ان:</b>\n\n` +
+      `📊 <b>آمار کلی پنل PURPLE:</b>\n\n` +
       `👥 <b>کل کاربران:</b> ${totalUsers} نفر\n` +
       `✅ <b>کاربران فعال:</b> ${activeUsers} نفر\n` +
       `❌ <b>کاربران منقضی:</b> ${expiredUsers} نفر\n` +
@@ -601,20 +585,17 @@ function handleTelegramUpdate(update) {
     return;
   }
 
-  // لیست گرافیکی کاربران همراه با دکمه‌های اینلاین برای هر کاربر
   if (text === '👥 مدیریت و لیست کاربران' || text === '/users') {
     sendUsersInlineList(chatId);
     return;
   }
 
-  // استعلام سریع
   if (text === '🔍 استعلام سریع') {
     sendUsersInlineList(chatId);
     return;
   }
 }
 
-// ارسال لیست اینلاین کاربران
 function sendUsersInlineList(chatId) {
   const users = getUsers();
   if (users.length === 0) {
@@ -640,7 +621,6 @@ function sendUsersInlineList(chatId) {
   );
 }
 
-// ارسال کارت مدیریت کامل یک کاربر
 function sendUserManagementCard(userId, chatId) {
   const users = getUsers();
   const user = users.find(u => u.id === userId || u.uuid === userId);
@@ -693,7 +673,7 @@ function restartSingboxProcess() {
 
   const singboxBin = process.env.SINGBOX_BIN || '/app/sing-box';
   if (fs.existsSync(singboxBin)) {
-    console.log('در حال راه‌اندازی هسته Sing-box دیزاینو...');
+    console.log('در حال راه‌اندازی هسته Sing-box PURPLE...');
     singboxProcess = spawn(singboxBin, ['run', '-c', SINGBOX_CONFIG_FILE], {
       stdio: 'inherit'
     });
@@ -745,7 +725,7 @@ app.use((req, res, next) => {
   }
 });
 
-// فایل‌های استاتیک برای فرانت‌اند
+// فایل‌های استاتیک
 app.use(express.static(path.join(__dirname, 'public')));
 
 // میدل‌ور احراز هویت با JWT
@@ -767,7 +747,6 @@ function authMiddleware(req, res, next) {
 
 // ---- API های سیستم ----
 
-// بررسی وضعیت راه‌اندازی اولیه
 app.get('/api/setup-status', (req, res) => {
   const settings = getSettings();
   res.json({
@@ -777,7 +756,6 @@ app.get('/api/setup-status', (req, res) => {
   });
 });
 
-// ثبت راه‌اندازی اولیه و تعیین کلمه عبور ادمین
 app.post('/api/setup-initial', (req, res) => {
   const { username, password, cleanIp } = req.body;
   const settings = getSettings();
@@ -803,12 +781,11 @@ app.post('/api/setup-initial', (req, res) => {
 
   res.json({
     success: true,
-    message: 'راه‌اندازی اولیه «پنل دیزاینو وی پی ان» با موفقیت انجام شد.',
+    message: 'راه‌اندازی اولیه «PURPLE» با موفقیت انجام شد.',
     token
   });
 });
 
-// ورود به پنل
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   const settings = getSettings();
@@ -826,19 +803,16 @@ app.post('/api/login', (req, res) => {
   return res.status(400).json({ success: false, message: 'نام کاربری یا کلمه عبور اشتباه است.' });
 });
 
-// خروج از حساب
 app.post('/api/logout', (req, res) => {
   res.clearCookie('token');
   res.json({ success: true, message: 'از سیستم خارج شدید.' });
 });
 
-// بررسی وضعیت ورود
 app.get('/api/check-auth', authMiddleware, (req, res) => {
   const settings = getSettings();
   res.json({ success: true, username: settings.username, settings });
 });
 
-// تغییر تنظیمات پنل
 app.post('/api/change-password', authMiddleware, (req, res) => {
   const { newUsername, newPassword, vlessPort, serviceName, cleanIp, enableVlessWs, enableVlessGrpc, enableTrojanWs, telegramBotToken, telegramAdminId } = req.body;
   const settings = getSettings();
@@ -860,10 +834,9 @@ app.post('/api/change-password', authMiddleware, (req, res) => {
   rebuildSingboxConfig();
   initTelegramBot();
 
-  res.json({ success: true, message: 'تنظیمات «دیزاینو وی پی ان» با موفقیت به‌روزرسانی شد.' });
+  res.json({ success: true, message: 'تنظیمات «PURPLE» با موفقیت به‌روزرسانی شد.' });
 });
 
-// API تنظیم و تست اتوماتیک ربات تلگرام
 app.post('/api/set-telegram-webhook', authMiddleware, (req, res) => {
   const { token, adminId } = req.body;
   const settings = getSettings();
@@ -879,7 +852,6 @@ app.post('/api/set-telegram-webhook', authMiddleware, (req, res) => {
   if (botAdminId) settings.telegramAdminId = botAdminId;
   saveSettings(settings);
 
-  // پاک کردن وب‌هوک قبلی جهت فعال‌سازی بی‌نقص پایش تلگرام و رفع مسدودی پورت
   const deleteReq = https.request({
     hostname: 'api.telegram.org',
     path: `/bot${botToken}/deleteWebhook`,
@@ -903,7 +875,6 @@ app.post('/api/set-telegram-webhook', authMiddleware, (req, res) => {
   deleteReq.end();
 });
 
-// آمار کلی داشبورد
 app.get('/api/stats', authMiddleware, (req, res) => {
   const users = getUsers();
   const today = new Date().toISOString().split('T')[0];
@@ -929,13 +900,11 @@ app.get('/api/stats', authMiddleware, (req, res) => {
   });
 });
 
-// دریافت لیست کاربران
 app.get('/api/users', authMiddleware, (req, res) => {
   const users = getUsers();
   res.json({ success: true, users });
 });
 
-// ساخت کاربر جدید
 app.post('/api/users', authMiddleware, (req, res) => {
   const { name, limitGB, expireDays } = req.body;
 
@@ -967,13 +936,11 @@ app.post('/api/users', authMiddleware, (req, res) => {
   users.push(newUser);
   saveUsers(users);
 
-  // ارسال پیام اطلاع‌رسانی تلگرام در صورت تنظیم
   sendTelegramMessage(`✨ **کاربر جدید ایجاد شد**\n👤 نام: ${newUser.name}\n📊 حجم: ${limitGB ? limitGB + ' GB' : 'نامحدود'}\n⏳ مدت: ${expireDays ? expireDays + ' روز' : 'نامحدود'}`);
 
   res.json({ success: true, message: 'کاربر جدید با موفقیت ایجاد شد.', user: newUser });
 });
 
-// ویرایش کاربر
 app.put('/api/users/:id', authMiddleware, (req, res) => {
   const { id } = req.params;
   const { name, limitGB, expireDate, status } = req.body;
@@ -993,7 +960,6 @@ app.put('/api/users/:id', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'اطلاعات کاربر با موفقیت ویرایش شد.', user: users[userIndex] });
 });
 
-// صفر کردن حجم مصرفی کاربر
 app.post('/api/users/:id/reset-traffic', authMiddleware, (req, res) => {
   const { id } = req.params;
   const users = getUsers();
@@ -1008,7 +974,6 @@ app.post('/api/users/:id/reset-traffic', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'ترافیک مصرفی کاربر صفر شد.' });
 });
 
-// حذف کاربر
 app.delete('/api/users/:id', authMiddleware, (req, res) => {
   const { id } = req.params;
   let users = getUsers();
@@ -1039,10 +1004,8 @@ app.get('/sub/:uuid', (req, res) => {
   const host = req.get('host') || '127.0.0.1';
   const domainOnly = host.split(':')[0];
 
-  // اگر آی‌پی تمیز در تنظیمات ثبت شده باشد، از آن به عنوان آدرس اتصال استفاده می‌شود
   const connectAddress = settings.cleanIp && settings.cleanIp.trim() !== '' ? settings.cleanIp.trim() : domainOnly;
 
-  // ساخت لیست کانفیگ‌های متنوع بر اساس تنظیمات
   const configsList = [];
 
   if (settings.enableVlessWs !== false) {
@@ -1054,13 +1017,12 @@ app.get('/sub/:uuid', (req, res) => {
   }
 
   if (settings.enableTrojanWs !== false) {
-    configsList.push(`trojan://${settings.trojanPassword || 'dizyno_trojan_pass'}@${connectAddress}:443?type=ws&path=%2Ftrojan&security=tls&fp=chrome&sni=${domainOnly}&host=${domainOnly}#${encodeURIComponent(user.name + ' | Trojan-WS')}`);
+    configsList.push(`trojan://${settings.trojanPassword || 'purple_trojan_pass'}@${connectAddress}:443?type=ws&path=%2Ftrojan&security=tls&fp=chrome&sni=${domainOnly}&host=${domainOnly}#${encodeURIComponent(user.name + ' | Trojan-WS')}`);
   }
 
   const combinedConfigs = configsList.join('\n');
   const base64Config = Buffer.from(combinedConfigs).toString('base64');
 
-  // تشخیص ۱۰۰٪ دقیق و رزروشده مرورگر در برابر نرم‌افزارهای VPN
   const userAgent = (req.headers['user-agent'] || '').toLowerCase();
   const acceptHeader = (req.headers['accept'] || '').toLowerCase();
   const secChUa = req.headers['sec-ch-ua'];
@@ -1074,7 +1036,6 @@ app.get('/sub/:uuid', (req, res) => {
   const isRealBrowser = (secChUa || acceptLanguage) && userAgent.includes('mozilla') && !isVpnClient;
   const shouldRenderHtml = (forceHtml || isRealBrowser) && !forceRaw;
 
-  // رندر صفحه وب گرافیکی فقط در صورت مطمئن بودن از مرورگر یا ارسال html=true
   if (shouldRenderHtml) {
     const usedGB = (user.usedBytes / (1024 * 1024 * 1024)).toFixed(2);
     const limitGB = user.limitBytes > 0 ? (user.limitBytes / (1024 * 1024 * 1024)).toFixed(2) : 'نامحدود';
@@ -1110,21 +1071,22 @@ app.get('/sub/:uuid', (req, res) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <title>دیزاینو وی پی ان | وضعیت اشتراک ${user.name}</title>
+      <title>PURPLE | وضعیت اشتراک ${user.name}</title>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
       <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
       <style>
         :root {
-          --bg-dark: #090d16;
-          --card-bg: rgba(18, 25, 41, 0.92);
-          --accent-cyan: #38bdf8;
-          --accent-indigo: #6366f1;
+          --bg-dark: #0a0418;
+          --card-bg: rgba(26, 10, 48, 0.92);
+          --accent-purple: #a855f7;
+          --accent-purple2: #c084fc;
+          --accent-purple3: #d8b4fe;
         }
         body {
           font-family: 'Vazirmatn', sans-serif;
-          background: radial-gradient(circle at top, #1e1b4b 0%, #090d16 60%);
-          color: #f8fafc;
+          background: radial-gradient(circle at top, #2c1250 0%, #0a0418 60%);
+          color: #f3e8ff;
           min-height: 100vh;
           display: flex;
           align-items: center;
@@ -1136,12 +1098,12 @@ app.get('/sub/:uuid', (req, res) => {
           background: var(--card-bg);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.14);
+          border: 1px solid rgba(168, 85, 247, 0.25);
           border-radius: 28px;
           padding: 28px;
           max-width: 460px;
           width: 100%;
-          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 25px 60px rgba(76, 29, 149, 0.6);
         }
         .brand-header {
           display: flex;
@@ -1152,14 +1114,14 @@ app.get('/sub/:uuid', (req, res) => {
         .brand-icon-box {
           width: 48px;
           height: 48px;
-          background: linear-gradient(135deg, #6366f1, #38bdf8);
+          background: linear-gradient(135deg, #a855f7, #c084fc);
           border-radius: 16px;
           display: flex;
           align-items: center;
           justify-content: center;
           font-size: 22px;
           color: white;
-          box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+          box-shadow: 0 8px 20px rgba(168, 85, 247, 0.5);
         }
         .status-pill {
           padding: 6px 14px;
@@ -1170,22 +1132,22 @@ app.get('/sub/:uuid', (req, res) => {
         .progress-track {
           height: 14px;
           border-radius: 8px;
-          background: #1e293b;
+          background: #1a0a30;
           overflow: hidden;
           padding: 2px;
         }
         .progress-bar-fill {
           height: 100%;
           border-radius: 6px;
-          background: linear-gradient(90deg, #38bdf8, #6366f1);
+          background: linear-gradient(90deg, #a855f7, #c084fc);
           transition: width 0.6s ease;
         }
         .progress-bar-fill.warning {
           background: linear-gradient(90deg, #f59e0b, #ef4444);
         }
         .stat-box {
-          background: rgba(15, 23, 42, 0.7);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(26, 10, 48, 0.7);
+          border: 1px solid rgba(168, 85, 247, 0.2);
           border-radius: 18px;
           padding: 14px;
           text-align: center;
@@ -1195,7 +1157,7 @@ app.get('/sub/:uuid', (req, res) => {
           padding: 12px;
           border-radius: 20px;
           display: inline-block;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
         }
         .btn-custom-action {
           border-radius: 14px;
@@ -1206,8 +1168,15 @@ app.get('/sub/:uuid', (req, res) => {
         }
         .btn-custom-action:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
+          box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4);
         }
+        .btn-primary {
+          background: linear-gradient(135deg, #a855f7, #7e22ce);
+          border: none;
+        }
+        .btn-primary:hover { background: linear-gradient(135deg, #c084fc, #9333ea); }
+        .text-info { color: #d8b4fe !important; }
+        .text-warning { color: #c084fc !important; }
       </style>
     </head>
     <body>
@@ -1219,7 +1188,7 @@ app.get('/sub/:uuid', (req, res) => {
             </div>
             <div>
               <h5 class="mb-0 text-white fw-bold">${user.name}</h5>
-              <span class="text-muted small" style="font-size: 0.78rem;">دیزاینو وی پی ان | Dizyno VPN</span>
+              <span class="text-muted small" style="font-size: 0.78rem;color:#c4a5e8 !important;">PURPLE</span>
             </div>
           </div>
           <span class="status-pill ${isExpired ? 'bg-danger text-white' : 'bg-success text-white'}">
@@ -1229,8 +1198,8 @@ app.get('/sub/:uuid', (req, res) => {
 
         <div class="mb-4">
           <div class="d-flex justify-content-between mb-2 small">
-            <span class="text-slate-300">حجم مصرفی: <strong class="text-white">${usedGB} GB</strong></span>
-            <span class="text-slate-300">حجم کل: <strong class="text-white">${limitGB} ${limitGB !== 'نامحدود' ? 'GB' : ''}</strong></span>
+            <span style="color:#c4a5e8;">حجم مصرفی: <strong class="text-white">${usedGB} GB</strong></span>
+            <span style="color:#c4a5e8;">حجم کل: <strong class="text-white">${limitGB} ${limitGB !== 'نامحدود' ? 'GB' : ''}</strong></span>
           </div>
           <div class="progress-track">
             <div class="progress-bar-fill ${percentUsed > 85 ? 'warning' : ''}" style="width: ${percentUsed}%"></div>
@@ -1240,14 +1209,14 @@ app.get('/sub/:uuid', (req, res) => {
         <div class="row g-3 mb-4">
           <div class="col-6">
             <div class="stat-box">
-              <div class="text-muted small mb-1">اعتبار زمانی</div>
-              <div class="fw-bold text-info">${daysRemainingText}</div>
+              <div class="small mb-1" style="color:#c4a5e8;">اعتبار زمانی</div>
+              <div class="fw-bold" style="color:#d8b4fe;">${daysRemainingText}</div>
             </div>
           </div>
           <div class="col-6">
             <div class="stat-box">
-              <div class="text-muted small mb-1">درصد مصرف</div>
-              <div class="fw-bold text-warning">${user.limitBytes > 0 ? percentUsed + '%' : '0%'}</div>
+              <div class="small mb-1" style="color:#c4a5e8;">درصد مصرف</div>
+              <div class="fw-bold" style="color:#c084fc;">${user.limitBytes > 0 ? percentUsed + '%' : '0%'}</div>
             </div>
           </div>
         </div>
@@ -1256,7 +1225,7 @@ app.get('/sub/:uuid', (req, res) => {
           <div class="qr-box mb-2">
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentSubUrl)}" alt="QR Code" width="180" height="180">
           </div>
-          <div class="text-muted small" style="font-size: 0.8rem;">اسکن بارکد در v2rayNG / Shadowrocket / NekoBox</div>
+          <div class="small" style="font-size: 0.8rem;color:#c4a5e8;">اسکن بارکد در v2rayNG / Shadowrocket / NekoBox</div>
         </div>
 
         <div class="d-grid gap-2 mb-3">
@@ -1289,7 +1258,6 @@ app.get('/sub/:uuid', (req, res) => {
     return res.send(htmlPage);
   }
 
-  // خروجی استاندارد Base64 برای کلاینت‌های v2ray
   const expireTimestamp = user.expireDate ? Math.floor(new Date(user.expireDate).getTime() / 1000) : 0;
   res.setHeader('Subscription-Userinfo', `upload=0; download=${user.usedBytes}; total=${user.limitBytes || 0}; expire=${expireTimestamp}`);
   res.setHeader('profile-title', `base64:${Buffer.from(user.name).toString('base64')}`);
@@ -1298,51 +1266,17 @@ app.get('/sub/:uuid', (req, res) => {
   return res.send(base64Config);
 });
 
-// مسیر دریافت راهنما
 app.get('/guide', (req, res) => {
   res.sendFile(path.join(__dirname, 'guide.html'));
 });
 
-// مدیریت سرویس تلگرام
-function sendTelegramMessage(text) {
-  const settings = getSettings();
-  if (!settings.telegramBotToken || !settings.telegramAdminId) return;
-
-  const url = `https://api.telegram.org/bot${settings.telegramBotToken}/sendMessage`;
-  const postData = JSON.stringify({
-    chat_id: settings.telegramAdminId,
-    text: text,
-    parse_mode: 'Markdown'
-  });
-
-  const req = https.request(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(postData)
-    }
-  });
-
-  req.on('error', () => {});
-  req.write(postData);
-  req.end();
-}
-
-function initTelegramBot() {
-  const settings = getSettings();
-  if (!settings.telegramBotToken) return;
-
-  console.log('ربات تلگرام «دیزاینو وی پی ان» فعال است.');
-}
-
-// ایجاد سرور HTTP و مدیریت ارتقا (Upgrade) به WebSocket
+// ایجاد سرور HTTP
 const server = http.createServer(app);
 
 server.on('upgrade', (req, socket, head) => {
   const url = req.url || '';
   
   if (url.startsWith('/vless') || req.headers['sec-websocket-protocol'] === 'vless') {
-    // پراکسی WebSocket VLESS به پورت 2083
     const targetSocket = net.connect({ port: 2083, host: '127.0.0.1' }, () => {
       let rawRequest = `${req.method} ${req.url} HTTP/${req.httpVersion}\r\n`;
       for (let i = 0; i < req.rawHeaders.length; i += 2) {
@@ -1360,7 +1294,6 @@ server.on('upgrade', (req, socket, head) => {
     targetSocket.on('error', () => socket.destroy());
     socket.on('error', () => targetSocket.destroy());
   } else if (url.startsWith('/trojan')) {
-    // پراکسی WebSocket Trojan به پورت 2085
     const targetSocket = net.connect({ port: 2085, host: '127.0.0.1' }, () => {
       let rawRequest = `${req.method} ${req.url} HTTP/${req.httpVersion}\r\n`;
       for (let i = 0; i < req.rawHeaders.length; i += 2) {
@@ -1382,16 +1315,14 @@ server.on('upgrade', (req, socket, head) => {
   }
 });
 
-// راه اندازی Sing-box و اجرای سرور
+// راه‌اندازی
 rebuildSingboxConfig();
 initTelegramBot();
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`====================================================`);
-  console.log(`🚀 پنل مدیریت «دیزاینو وی پی ان» (Dizyno VPN Panel) اجرا شد.`);
+  console.log(`🚀 پنل مدیریت «PURPLE» (Purple VPN Panel) اجرا شد.`);
   console.log(`🌐 پورت سرور: ${PORT}`);
   console.log(`📁 مسیر داده‌ها: ${DATA_DIR}`);
   console.log(`====================================================`);
 });
-
-
