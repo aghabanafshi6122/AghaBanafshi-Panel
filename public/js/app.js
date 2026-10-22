@@ -1,5 +1,5 @@
 /**
- * منطق فرانت‌اند داشبورد مدیریت «دیزاینو وی پی ان» (Dizyno VPN Panel)
+ * منطق فرانت‌اند داشبورد مدیریت «PURPLE» (PurplePanel)
  */
 
 let globalUsersList = [];
@@ -88,7 +88,6 @@ async function initApp() {
     const setupData = await setupRes.json();
 
     if (!setupData.isConfigured) {
-      // اگر پنل راه‌اندازی اولیه نشده است
       document.getElementById('setupSection').classList.remove('d-none');
       document.getElementById('loginSection').classList.add('d-none');
       document.getElementById('dashboardSection').classList.add('d-none');
@@ -97,7 +96,6 @@ async function initApp() {
       document.getElementById('setupSection').classList.add('d-none');
     }
 
-    // بررسی ورود ادمین
     const authRes = await fetch('/api/check-auth');
     const authData = await authRes.json();
 
@@ -223,10 +221,8 @@ function renderUsersTable() {
   const today = new Date().toISOString().split('T')[0];
 
   let filteredUsers = globalUsersList.filter(u => {
-    // فیلتر متنی
     const matchSearch = u.name.toLowerCase().includes(searchQuery) || u.uuid.toLowerCase().includes(searchQuery);
     
-    // فیلتر وضعیت
     let isExpiredOrLimit = (u.expireDate && u.expireDate < today) || (u.limitBytes > 0 && u.usedBytes >= u.limitBytes);
     let userStatus = u.status;
     if (userStatus === 'active' && isExpiredOrLimit) userStatus = 'expired';
@@ -244,8 +240,8 @@ function renderUsersTable() {
     tbody.innerHTML = `
       <tr>
         <td colspan="6" class="text-center py-5" style="background: var(--bg-card) !important;">
-          <div class="p-4 rounded-4 d-inline-block" style="background: rgba(56, 189, 248, 0.05); border: 1px dashed rgba(56, 189, 248, 0.25);">
-            <i class="fa-solid fa-folder-open fs-1 text-info d-block mb-3 opacity-75"></i>
+          <div class="p-4 rounded-4 d-inline-block" style="background: rgba(168, 85, 247, 0.05); border: 1px dashed rgba(168, 85, 247, 0.25);">
+            <i class="fa-solid fa-folder-open fs-1 d-block mb-3 opacity-75" style="color:#c084fc;"></i>
             <span class="fw-bold text-white fs-6">هیچ کاربری یافت نشد.</span>
             <p class="text-slate-300 small mb-0 mt-1">برای اضافه کردن کاربر جدید روی دکمه "ایجاد کاربر جدید" کلیک کنید.</p>
           </div>
@@ -290,8 +286,8 @@ function renderUsersTable() {
       </td>
       <td>${statusBadge}</td>
       <td>
-        <div><strong class="text-info">${usedGB} GB</strong> / <span class="text-muted">${limitGB}</span></div>
-        ${u.limitBytes > 0 ? `<div class="progress mt-1" style="height: 6px;"><div class="progress-bar bg-info" style="width: ${percent}%"></div></div>` : ''}
+        <div><strong style="color:#d8b4fe;">${usedGB} GB</strong> / <span class="text-muted">${limitGB}</span></div>
+        ${u.limitBytes > 0 ? `<div class="progress mt-1" style="height: 6px; background:rgba(168,85,247,.15);"><div class="progress-bar" style="width: ${percent}%; background: linear-gradient(90deg,#a855f7,#c084fc);"></div></div>` : ''}
       </td>
       <td>
         <div class="small fw-bold ${expireText === 'منقضی شده' ? 'text-danger' : 'text-warning'}">${expireText}</div>
@@ -299,13 +295,13 @@ function renderUsersTable() {
       </td>
       <td>
         <div class="d-flex gap-1 justify-content-center">
-          <button class="btn btn-sm btn-outline-info btn-action" onclick="copyToClipboard('${subUrl}', 'لینک ساب کپی شد!')" title="کپی لینک ساب (Subscription)">
+          <button class="btn btn-sm btn-outline-info btn-action" onclick="copyToClipboard('${subUrl}', 'لینک ساب کپی شد!')" title="کپی لینک ساب">
             <i class="fa-solid fa-link"></i>
           </button>
-          <button class="btn btn-sm btn-outline-success btn-action" onclick="openUserSubPage('${subUrl}')" title="مشاهده صفحه ساب کاربر">
+          <button class="btn btn-sm btn-outline-success btn-action" onclick="openUserSubPage('${subUrl}')" title="مشاهده صفحه ساب">
             <i class="fa-solid fa-eye"></i>
           </button>
-          <button class="btn btn-sm btn-outline-warning btn-action" onclick="resetUserTraffic('${u.id}')" title="صفر کردن ترافیک مصرفی">
+          <button class="btn btn-sm btn-outline-warning btn-action" onclick="resetUserTraffic('${u.id}')" title="صفر کردن ترافیک">
             <i class="fa-solid fa-rotate"></i>
           </button>
           <button class="btn btn-sm btn-outline-primary btn-action" onclick="openEditUserModal('${u.id}', '${u.name}', '${u.limitBytes ? u.limitBytes / (1024*1024*1024) : 0}', '${u.expireDate || ''}', '${u.status}')" title="ویرایش">
@@ -421,7 +417,7 @@ function loadSettingsModal() {
   if (document.getElementById('settingTelegramAdminId')) document.getElementById('settingTelegramAdminId').value = adm;
 }
 
-// فعال‌سازی اتوماتیک و تست ربات تلگرام از فرانت‌اند
+// فعال‌سازی اتوماتیک و تست ربات تلگرام
 async function triggerRailwaySetWebhook() {
   const token = (document.getElementById('telegramTokenInput')?.value || '').trim();
   const adminId = (document.getElementById('telegramAdminIdInput')?.value || '').trim();
@@ -583,7 +579,7 @@ async function loadCleanIpsModal() {
           <div class="clean-ip-card d-flex justify-content-between align-items-center">
             <div>
               <div class="fw-bold text-white small">${item.name}</div>
-              <code class="text-info small">${item.ip}</code>
+              <code class="small" style="color:#d8b4fe;">${item.ip}</code>
               <div class="text-muted extra-small" style="font-size: 0.75rem;">${item.latency}</div>
             </div>
             <button class="btn btn-sm btn-outline-info rounded-3" onclick="applyPresetCleanIp('${item.ip}')">
@@ -637,9 +633,9 @@ function openUserSubPage(url) {
   window.open(url + '?html=true', '_blank');
 }
 
-// مدیریت تم روشن و تیره (Light / Dark Mode)
+// مدیریت تم روشن و تیره
 function initTheme() {
-  const savedTheme = localStorage.getItem('dizyno_theme') || 'dark';
+  const savedTheme = localStorage.getItem('purple_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', savedTheme);
   updateThemeIcon(savedTheme);
 }
@@ -648,7 +644,7 @@ function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('dizyno_theme', newTheme);
+  localStorage.setItem('purple_theme', newTheme);
   updateThemeIcon(newTheme);
 }
 
@@ -672,7 +668,7 @@ function startOnboardingTour() {
     showProgress: true,
     steps: [
       {
-        title: 'به پنل دیزاینو وی پی ان خوش آمدید! 👋',
+        title: 'به PURPLE خوش آمدید! 👋',
         intro: 'این پنل برای ایجاد کاربران، تنظیم پروتکل‌های VLESS و Trojan و مدیریت آی‌پی‌های تمیز طراحی شده است.'
       },
       {
@@ -693,4 +689,3 @@ function startOnboardingTour() {
     ]
   }).start();
 }
-
