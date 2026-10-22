@@ -1,7 +1,7 @@
 {
-  "name": "singbox-vpn-panel",
+  "name": "purple-vpn-panel",
   "version": "1.0.0",
-  "description": "پنل مدیریت اختصاصی، سبک و فوق‌سریع VPN با هسته Sing-box برای Railway",
+  "description": "پنل مدیریت PURPLE — سبک و سریع VPN با هسته Sing-box برای Railway",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -11,6 +11,7 @@
     "vless",
     "grpc",
     "vpn-panel",
+    "purple",
     "railway",
     "v2ray"
   ],
